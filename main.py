@@ -16,6 +16,7 @@ OUTRO_VID = ''
 TOTAL_VID_LENGTH = 13*60
 MAX_CLIP_LENGTH = 18
 MIN_CLIP_LENGTH = 4
+DAILY_SCHEDULED_TIME = "19:05"
 
 num_to_month = {
     1: "Jan",
@@ -44,7 +45,7 @@ def routine():
 
     if not os.path.exists(videoDirectory):
         os.makedirs(videoDirectory)
-    """
+    
     # Step 1: Scrape Videos
     print("Scraping Videos...")
     scrapeVideos(username = IG_USERNAME,
@@ -52,7 +53,7 @@ def routine():
                  output_folder = videoDirectory,
                  days=1)
     print("Scraped Videos!")
-    """
+    
     f = open(metadataFile, "w")
     f.write(title + "\n\n")
     description = "Enjoy the memes :) \n\n" \
@@ -105,7 +106,7 @@ def attemptRoutine():
         routine()
 
 attemptRoutine()
-schedule.every().day.at("19:05").do(attemptRoutine)
+schedule.every().day.at(DAILY_SCHEDULED_TIME).do(attemptRoutine)
 
 while True:
     schedule.run_pending()
