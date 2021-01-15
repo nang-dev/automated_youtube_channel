@@ -36,5 +36,5 @@ def scrapeVideos(username = "",
 
 if __name__ == "__main__":
     scrapeVideos(username = "chewymemes_v3",
-                 password = "mmm12345",
+                 password = "",
                  output_folder = "./Memes_December_4")
