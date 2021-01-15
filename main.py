@@ -8,8 +8,8 @@ import os
 import shutil
 
 # FILL THESE OUT
-IG_USERNAME = "chewymemes_v3" 
-IG_PASSWORD = "mmm12345"
+IG_USERNAME = "" 
+IG_PASSWORD = ""
 
 INTRO_VID = 'intro_vid.mp4' # SET AS '' IF YOU DONT HAVE ONE
 OUTRO_VID = ''
