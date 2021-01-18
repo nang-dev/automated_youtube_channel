@@ -11,7 +11,7 @@ import shutil
 IG_USERNAME = "" 
 IG_PASSWORD = ""
 
-INTRO_VID = 'intro_vid.mp4' # SET AS '' IF YOU DONT HAVE ONE
+INTRO_VID = '' # SET AS '' IF YOU DONT HAVE ONE
 OUTRO_VID = ''
 TOTAL_VID_LENGTH = 13*60
 MAX_CLIP_LENGTH = 18
@@ -36,7 +36,7 @@ num_to_month = {
 def routine():
     now = datetime.datetime.now()
     print(now.year, now.month, now.day, now.hour, now.minute, now.second)
-    title = "BEST DANK MEMES COMPILATION V" + str(now.month) + "." + str(now.day) + " (VIDEOS)"
+    title = "TEST V" + str(now.month) + "." + str(now.day)
     videoDirectory = "/tmp/Memes_" + num_to_month[now.month].upper() + "_" + str(now.year) + "_V" + str(now.day) + "/"
     outputFile = "./" + num_to_month[now.month].upper() + "_" + str(now.year) + "_v" + str(now.day) + ".mp4"
     metadataFile = "./metadata-" + num_to_month[now.month].upper() + "_" + str(now.year) + "_v" + str(now.day) + ".txt"
