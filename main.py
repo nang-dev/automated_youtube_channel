@@ -6,6 +6,12 @@ import time
 import datetime
 import os
 import shutil
+import google_auth_oauthlib.flow #pip install google-auth-oauthlib
+import googleapiclient.discovery #pip install google-api-python-client
+import googleapiclient.errors
+
+scopes = ["https://www.googleapis.com/auth/youtube.upload"]
+
 
 # FILL THESE OUT
 IG_USERNAME = "" 
@@ -14,9 +20,9 @@ IG_PASSWORD = ""
 INTRO_VID = '' # SET AS '' IF YOU DONT HAVE ONE
 OUTRO_VID = ''
 TOTAL_VID_LENGTH = 13*60
-MAX_CLIP_LENGTH = 18
-MIN_CLIP_LENGTH = 4
-DAILY_SCHEDULED_TIME = "19:05"
+MAX_CLIP_LENGTH = 19
+MIN_CLIP_LENGTH = 5
+DAILY_SCHEDULED_TIME = "20:00"
 
 num_to_month = {
     1: "Jan",
@@ -33,13 +39,24 @@ num_to_month = {
     12: "Dec"
 } 
 
+# Setup Google API
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+api_service_name = "youtube"
+api_version = "v3"
+client_secrets_file = "googleAPI.json"
+flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
+        client_secrets_file, scopes)
+credentials = flow.run_console()
+googleAPI = googleapiclient.discovery.build(
+    api_service_name, api_version, credentials=credentials)
+
 def routine():
     now = datetime.datetime.now()
     print(now.year, now.month, now.day, now.hour, now.minute, now.second)
-    title = "TEST V" + str(now.month) + "." + str(now.day)
-    videoDirectory = "/tmp/Memes_" + num_to_month[now.month].upper() + "_" + str(now.year) + "_V" + str(now.day) + "/"
+    title = "TRY NOT TO LAUGH (BEST Dank video memes) V1"
+    videoDirectory = "./Memes_" + num_to_month[now.month].upper() + "_" + str(now.year) + "_V" + str(now.day) + "/"
     outputFile = "./" + num_to_month[now.month].upper() + "_" + str(now.year) + "_v" + str(now.day) + ".mp4"
-    metadataFile = "./metadata-" + num_to_month[now.month].upper() + "_" + str(now.year) + "_v" + str(now.day) + ".txt"
+    #metadataFile = "./metadata-" + num_to_month[now.month].upper() + "_" + str(now.year) + "_v" + str(now.day) + ".txt"
     description = ""
     print(outputFile)
 
@@ -54,17 +71,12 @@ def routine():
                  days=1)
     print("Scraped Videos!")
     
-    f = open(metadataFile, "w")
-    f.write(title + "\n\n")
     description = "Enjoy the memes :) \n\n" \
     "like and subscribe to @Chewy for more \n\n" \
-    "The memes in the compilation are reposts from various private instagram meme accounts.\n" \
-    "this episode's were from: \n"
-    f.write(description)
 
     # Step 2: Make Compilation
     print("Making Compilation...")
-    description += makeCompilation(path = videoDirectory,
+    makeCompilation(path = videoDirectory,
                     introName = INTRO_VID,
                     outroName = OUTRO_VID,
                     totalVidLength = TOTAL_VID_LENGTH,
@@ -75,14 +87,13 @@ def routine():
     
     description += "\n\nCopyright Disclaimer, Under Section 107 of the Copyright Act 1976, allowance is made for 'fair use' for purposes such as criticism, comment, news reporting, teaching, scholarship, and research. Fair use is a use permitted by copyright statute that might otherwise be infringing. Non-profit, educational or personal use tips the balance in favor of fair use.\n\n"
     description += "#memes #dankmemes #compilation #funny #funnyvideos \n\n"
-    f.write(description + "\n\n")
-    f.close()
     
     # Step 3: Upload to Youtube
     print("Uploading to Youtube...")
     uploadYtvid(VIDEO_FILE_NAME=outputFile,
                 title=title,
-                description=description)
+                description=description,
+                googleAPI=googleAPI)
     print("Uploaded To Youtube!")
     
     # Step 4: Cleanup
@@ -93,22 +104,24 @@ def routine():
     #   File outputFile
     try:
         os.remove(outputFile)
-    except OSError as e:  ## if faile,d, report it back to the user ##
+    except OSError as e:  ## if failed, report it back to the user ##
         print ("Error: %s - %s." % (e.filename, e.strerror))
     print("Removed temp files!")
 
 def attemptRoutine():
-    try:
-        routine()
-    except OSError as err:
-        print("Routine Failed on " + "OS error: {0}".format(err))
-        time.sleep(60*60)
-        routine()
+    while(1):
+        try:
+            routine()
+            break
+        except OSError as err:
+            print("Routine Failed on " + "OS error: {0}".format(err))
+            time.sleep(60*60)
 
-attemptRoutine()
+#attemptRoutine()
 schedule.every().day.at(DAILY_SCHEDULED_TIME).do(attemptRoutine)
 
+
 while True:
-    schedule.run_pending()
+    schedule.run_pending()  
     time.sleep(60) # wait one min
 

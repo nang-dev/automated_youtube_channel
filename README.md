@@ -12,9 +12,7 @@ Code to run a fully automated youtube that can scrape content, edit a compilatio
 
 4. Get setup and create a Project with the Youtube API: https://developers.google.com/youtube/v3/quickstart/python
 Be sure to follow it carefully, as it won't work if you don't do this part right.
-Download your OATH file as "secret.json" in your folder.
-
-5. Run `python3 setup_google.py` and follow the web page that opens up.
+Download your OATH file as "googleAPI.json" in your project folder.
 
 6. Create an instagram account and follow accounts you want to scrape from
 

@@ -47,7 +47,6 @@ def makeCompilation(path = "./",
             print(fileName)
             filePath = os.path.join(path, fileName)
             # Destination path  
-            destination = os.path.join("./Duplicates/", fileName)
             clip = VideoFileClip(filePath)
             clip = clip.resize(width=1920)
             clip = clip.resize(height=1080)
@@ -59,14 +58,7 @@ def makeCompilation(path = "./",
                 totalLength += duration
     
     print("Total Length: " + str(totalLength))
-    for length in seenLengths:
-        lst = seenLengths[length]
-        if len(lst) > 1:
-            for fileName in lst:
-                filePath = os.path.join(path, fileName)
-                # Destination path  
-                destination = os.path.join("./Duplicates/", fileName)
-                shutil.copy(filePath, destination)  
+
     random.shuffle(allVideos)
 
     duration = 0
