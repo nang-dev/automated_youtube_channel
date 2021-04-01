@@ -111,6 +111,7 @@ def routine():
 def attemptRoutine():
     while(1):
         try:
+            print("Running! Will run script everyday at: " + str(DAILY_SCHEDULED_TIME))
             routine()
             break
         except OSError as err:

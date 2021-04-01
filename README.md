@@ -18,6 +18,6 @@ Download your OATH file as "googleAPI.json" in your project folder.
 
 7. Open main.py in a text editor and fill in necessary information
 
-8. Run `python3 main.py`
+8. Run `python3 main.py` You have to sign in to your Youtube Account through the link the script will give you.
 
 9. Enjoy your fully automated youtube channel! :) Note that for uploading public videos, you have to complete an audit for the Youtube API. See the note in the [Google Documentation](https://developers.google.com/youtube/v3/docs/videos/insert)
