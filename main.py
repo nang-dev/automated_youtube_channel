@@ -118,7 +118,7 @@ def attemptRoutine():
             print("Routine Failed on " + "OS error: {0}".format(err))
             time.sleep(60*60)
 
-#attemptRoutine()
+attemptRoutine()
 schedule.every().day.at(DAILY_SCHEDULED_TIME).do(attemptRoutine)
 
 
