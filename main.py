@@ -6,23 +6,12 @@ import time
 import datetime
 import os
 import shutil
-import google_auth_oauthlib.flow #pip install google-auth-oauthlib
-import googleapiclient.discovery #pip install google-api-python-client
 import googleapiclient.errors
-
-scopes = ["https://www.googleapis.com/auth/youtube.upload"]
-
-
-# FILL THESE OUT
-IG_USERNAME = "" 
-IG_PASSWORD = ""
-
-INTRO_VID = '' # SET AS '' IF YOU DONT HAVE ONE
-OUTRO_VID = ''
-TOTAL_VID_LENGTH = 13*60
-MAX_CLIP_LENGTH = 19
-MIN_CLIP_LENGTH = 5
-DAILY_SCHEDULED_TIME = "20:00"
+from googleapiclient.discovery import build #pip install google-api-python-client
+from google_auth_oauthlib.flow import InstalledAppFlow #pip install google-auth-oauthlib
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+import config
 
 num_to_month = {
     1: "Jan",
@@ -39,23 +28,56 @@ num_to_month = {
     12: "Dec"
 } 
 
-# Setup Google API
+# USER VARIABLES FILL THESE OUT (fill out username and password in config.py)
+IG_USERNAME = config.IG_USERNAME
+IG_PASSWORD = config.IG_PASSWORD
+print(IG_USERNAME)
+print(IG_PASSWORD)
+title = "TRY NOT TO LAUGH (BEST Dank video memes) V1"
+now = datetime.datetime.now()
+videoDirectory = "./DankMemes_" + num_to_month[now.month].upper() + "_" + str(now.year) + "_V" + str(now.day) + "/"
+outputFile = "./" + num_to_month[now.month].upper() + "_" + str(now.year) + "_v" + str(now.day) + ".mp4"
+
+INTRO_VID = '' # SET AS '' IF YOU DONT HAVE ONE
+OUTRO_VID = ''
+TOTAL_VID_LENGTH = 13*60
+MAX_CLIP_LENGTH = 19
+MIN_CLIP_LENGTH = 5
+DAILY_SCHEDULED_TIME = "20:00"
+TOKEN_NAME = "token.json"
+
+# Setup Google 
+SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-api_service_name = "youtube"
-api_version = "v3"
 client_secrets_file = "googleAPI.json"
-flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
-        client_secrets_file, scopes)
-credentials = flow.run_console()
-googleAPI = googleapiclient.discovery.build(
-    api_service_name, api_version, credentials=credentials)
 
 def routine():
+
+    # Handle GoogleAPI oauthStuff
+    print("Handling GoogleAPI")
+    creds = None
+    # The file token1.json stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists(TOKEN_NAME):
+        creds = Credentials.from_authorized_user_file(TOKEN_NAME, SCOPES)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                client_secrets_file, SCOPES)
+            creds = flow.run_console()
+        # Save the credentials for the next run
+        with open(TOKEN_NAME, 'w') as token:
+            token.write(creds.to_json())
+
+    googleAPI = build('youtube', 'v3', credentials=creds)
+
     now = datetime.datetime.now()
     print(now.year, now.month, now.day, now.hour, now.minute, now.second)
-    title = "TRY NOT TO LAUGH (BEST Dank video memes) V1"
-    videoDirectory = "./Memes_" + num_to_month[now.month].upper() + "_" + str(now.year) + "_V" + str(now.day) + "/"
-    outputFile = "./" + num_to_month[now.month].upper() + "_" + str(now.year) + "_v" + str(now.day) + ".mp4"
+    
     #metadataFile = "./metadata-" + num_to_month[now.month].upper() + "_" + str(now.year) + "_v" + str(now.day) + ".txt"
     description = ""
     print(outputFile)
@@ -68,10 +90,10 @@ def routine():
     scrapeVideos(username = IG_USERNAME,
                  password = IG_PASSWORD,
                  output_folder = videoDirectory,
-                 days=1)
+                  days=1)
     print("Scraped Videos!")
     
-    description = "Enjoy the memes :) \n\n" \
+    description = "Enjoy the memes! :) \n\n" \
     "like and subscribe to @Chewy for more \n\n" \
 
     # Step 2: Make Compilation
@@ -87,7 +109,7 @@ def routine():
     
     description += "\n\nCopyright Disclaimer, Under Section 107 of the Copyright Act 1976, allowance is made for 'fair use' for purposes such as criticism, comment, news reporting, teaching, scholarship, and research. Fair use is a use permitted by copyright statute that might otherwise be infringing. Non-profit, educational or personal use tips the balance in favor of fair use.\n\n"
     description += "#memes #dankmemes #compilation #funny #funnyvideos \n\n"
-    
+
     # Step 3: Upload to Youtube
     print("Uploading to Youtube...")
     uploadYtvid(VIDEO_FILE_NAME=outputFile,
@@ -111,7 +133,6 @@ def routine():
 def attemptRoutine():
     while(1):
         try:
-            print("Running! Will run script everyday at: " + str(DAILY_SCHEDULED_TIME))
             routine()
             break
         except OSError as err:
@@ -121,7 +142,7 @@ def attemptRoutine():
 #attemptRoutine()
 schedule.every().day.at(DAILY_SCHEDULED_TIME).do(attemptRoutine)
 
-
+attemptRoutine()
 while True:
     schedule.run_pending()  
     time.sleep(60) # wait one min

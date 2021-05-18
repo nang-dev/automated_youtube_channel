@@ -43,9 +43,13 @@ def makeCompilation(path = "./",
     seenLengths = defaultdict(list)
     totalLength = 0
     for fileName in os.listdir(path):
-        if isfile(join(path, fileName)) and fileName.endswith(".mp4"):
+        
+        filePath = join(path, fileName);
+        if isfile(filePath) and fileName.endswith(".mp4"):
             print(fileName)
-            filePath = os.path.join(path, fileName)
+            if os.stat(filePath).st_size < 5000:
+                continue
+
             # Destination path  
             clip = VideoFileClip(filePath)
             clip = clip.resize(width=1920)

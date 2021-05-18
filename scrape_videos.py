@@ -20,18 +20,22 @@ def scrapeVideos(username = "",
     following = profile.get_followees()
     print(following)
 
+    today = datetime.date.today()
+    timeframe = (today, today - dateutil.relativedelta.relativedelta(days=days))
+
     for profile in following:
         acc = profile.username
         looter = ProfileLooter(acc, videos_only=True, template="{id}-{username}-{width}-{height}")
         if not looter.logged_in():
             looter.login(username, password)
         print("Scraping From Account: " + acc)
-
-        today = datetime.date.today()
-        timeframe = (today, today - dateutil.relativedelta.relativedelta(days=days))
-        numDowloaded = looter.download(output_folder, media_count=30, timeframe=timeframe)
-        print("Downloaded " + str(numDowloaded) + " videos successfully")
-        print("")
+        try:
+            numDowloaded = looter.download(output_folder, media_count=30, timeframe=timeframe)
+            print("Downloaded " + str(numDowloaded) + " videos successfully")
+            print("")
+        except Exception as e:
+            print("Skipped acc " + acc + "because of");
+            print(e);
 
 
 if __name__ == "__main__":
