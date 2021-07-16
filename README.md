@@ -17,9 +17,9 @@ Download your OATH file as "googleAPI.json" in your project folder.
 
 6. Create an instagram account and follow accounts you want to scrape from
 
-7. Open main.py in a text editor and fill in necessary information
+7. Open config.py in a text editor and fill in credentials
 
-8. Open config.py in a text editor and fill in credentials
+8. Open main.py in a text editor and fill in necessary information, such as MAX_CLIP_LENGTH.
 
 9. Run `python3 main.py` in your computer terminal (terminal or cmd). You have to sign in to your Youtube Account through the link the script will give you. It's going to ask you: "Please visit this URL to authorize this application:..." so you copy that link, paste it in your browser, and then sign into your Google account. Then paste the authentication code you get back into your terminal.
 
