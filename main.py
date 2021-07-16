@@ -44,7 +44,7 @@ TOTAL_VID_LENGTH = 13*60
 MAX_CLIP_LENGTH = 19
 MIN_CLIP_LENGTH = 5
 DAILY_SCHEDULED_TIME = "20:00"
-TOKEN_NAME = "token.json"
+TOKEN_NAME = "token.json" # Don't change
 
 # Setup Google 
 SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
