@@ -5,7 +5,7 @@ Read about it here: https://medium.com/@nathan_149/making-a-fully-automated-yout
 
 # Instructions
 
-1. [Download](https://github.com/nathan-149/automated_youtube_channel/archive/main.zip) the Github Repository
+1. [Download](https://github.com/nathan-149/automated_youtube_channel/archive/refs/heads/master.zip) the Github Repository
 
 2. Download and install [Python3](https://www.python.org/downloads/) and [pip](https://pip.pypa.io/en/stable/installing/)
 
