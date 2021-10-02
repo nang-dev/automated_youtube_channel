@@ -1,6 +1,6 @@
 google_api_python_client==1.12.8
 google_auth_oauthlib==0.4.2
-instaloader==4.5.5
+instaloader==4.8.1
 instalooter==2.4.4
 moviepy==1.0.3
 protobuf==3.14.0
